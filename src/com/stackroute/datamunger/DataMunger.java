@@ -1,4 +1,5 @@
 package com.stackroute.datamunger;
+import java.util.*;
 
 /*There are total 5 DataMungertest files:
  * 
@@ -34,8 +35,8 @@ public class DataMunger {
 	 */
 
 	public String[] getSplitStrings(String queryString) {
-
-		return null;
+		String str[]= queryString.toLowerCase().split(" ");
+		return str;
 	}
 
 	/*
@@ -47,8 +48,16 @@ public class DataMunger {
 	 */
 
 	public String getFileName(String queryString) {
-
-		return null;
+		int flag=0;
+		String s="";
+		String str[]= queryString.toLowerCase().split(" ");
+		for(int i=0;i<str.length && flag==0;i++) {
+			if (str[i].equals("from")) {
+				s = str[i + 1];
+				flag = 1;
+			}
+		}
+		return s;
 	}
 
 	/*
@@ -62,8 +71,8 @@ public class DataMunger {
 	 */
 	
 	public String getBaseQuery(String queryString) {
-
-		return null;
+		String str[]= queryString.toLowerCase().split(" where| order by| group by");
+		return str[0];
 	}
 
 	/*
@@ -79,8 +88,9 @@ public class DataMunger {
 	 */
 	
 	public String[] getFields(String queryString) {
-
-		return null;
+		String str[]= queryString.toLowerCase().split(" ");
+		String s[]=str[1].toLowerCase().split(",");
+		return s;
 	}
 
 	/*
@@ -94,8 +104,15 @@ public class DataMunger {
 	 */
 	
 	public String getConditionsPartQuery(String queryString) {
-
-		return null;
+		String str[]= queryString.toLowerCase().split("where ");
+		String s1=null;
+		try{
+			String s[]=str[1].toLowerCase().split(" group by| order by");
+			s1=s[0];
+		}
+		catch(ArrayIndexOutOfBoundsException e){
+		}
+		return s1;
 	}
 
 	/*
@@ -114,8 +131,16 @@ public class DataMunger {
 	 */
 
 	public String[] getConditions(String queryString) {
-
-		return null;
+		String str[]= queryString.toLowerCase().split("where ");
+		String s1[]={};
+		try{
+			String s[]=str[1].toLowerCase().split(" group by| order by");
+			s1 =s[0].toLowerCase().split(" and | or ");
+		}
+		catch(ArrayIndexOutOfBoundsException e){
+			s1=null;
+		}
+		return s1;
 	}
 
 	/*
@@ -130,8 +155,29 @@ public class DataMunger {
 	 */
 
 	public String[] getLogicalOperators(String queryString) {
-
-		return null;
+		String str[]= queryString.toLowerCase().split("where ");
+		int flag=1;
+		ArrayList<String>  a1 = new ArrayList<String>();
+		try{
+			String s[]=str[1].toLowerCase().split(" group by| order by");
+			String s1[] =s[0].toLowerCase().split(" ");
+			for(int i=0;i<s1.length;i++){
+				if(s1[i].equals("and") || s1[i].equals("or")){
+					a1.add(s1[i]);
+				}
+			}
+		}
+		catch(ArrayIndexOutOfBoundsException e){
+			flag=0;
+		}
+		String s11[] = new String[a1.size()]; // ArrayList to Array Conversion
+		for (int k = 0; k < a1.size(); k++) {
+			s11[k] = a1.get(k);   // Assign each value to String array
+		}
+		if(flag==0){
+			s11=null;
+		}
+		return s11;
 	}
 
 	/*
@@ -143,8 +189,15 @@ public class DataMunger {
 	 */
 
 	public String[] getOrderByFields(String queryString) {
-
-		return null;
+		String str[]= queryString.toLowerCase().split("order by ");
+		String s[]={};
+		try{
+			s=str[1].toLowerCase().split(",");
+		}
+		catch(ArrayIndexOutOfBoundsException e){
+			s=null;
+		}
+		return s;
 	}
 
 	/*
@@ -157,8 +210,15 @@ public class DataMunger {
 	 */
 
 	public String[] getGroupByFields(String queryString) {
-
-		return null;
+		String str[]= queryString.toLowerCase().split("group by ");
+		String s[]={};
+		try{
+			s=str[1].toLowerCase().split(",");
+		}
+		catch(ArrayIndexOutOfBoundsException e){
+			s=null;
+		}
+		return s;
 	}
 
 	/*
@@ -172,8 +232,31 @@ public class DataMunger {
 	 */
 
 	public String[] getAggregateFunctions(String queryString) {
-
-		return null;
+		String str[] = queryString.toLowerCase().split("select | from");
+		ArrayList<String> a1 = new ArrayList<String>();
+		String[] words = {"count(", "sum(", "min(", "max(", "avg("};
+		String s[] = str[1].toLowerCase().split(",");
+		int flag = 1;
+		for (int i = 0; i < s.length; i++) {
+			boolean isFound = s[i].contains("(");
+			if (isFound) {
+				for (String word : words) {
+					if (s[i].contains(word)) {
+						a1.add(s[i]);
+						flag = 0;
+					}
+				}
+			}
+		}
+		String s11[] = new String[a1.size()]; // ArrayList to Array Conversion
+		if(flag==0) {
+			for (int k = 0; k < a1.size(); k++) {
+				s11[k] = a1.get(k);   // Assign each value to String array
+			}
+		}
+		else{
+			s11=null;
+		}
+		return s11;
 	}
-
 }

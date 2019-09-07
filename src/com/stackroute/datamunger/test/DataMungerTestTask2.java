@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.stackroute.datamunger.DataMunger;
 
-public class DataMungerTestTask2 {
+public class 	DataMungerTestTask2 {
 
 	private static DataMunger dataMunger;
 
